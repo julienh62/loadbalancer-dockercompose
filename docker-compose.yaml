@@ -10,36 +10,29 @@ services:
       - ./nginx/wordpress1.conf:/etc/nginx/conf.d/wordpress1.conf
       - ./nginx/wordpress2.conf:/etc/nginx/conf.d/wordpress2.conf
       - ./nginx/html:/var/www/html
+      - ./nginx/logs:/var/log/nginx
+      - /etc/letsencrypt/live/mon-loadbalancer.julien-hennebo.cloudns.be:/etc/letsencrypt/live/mon-loadbalancer.julien-hennebo.cloudns.be
+      - /etc/letsencrypt/archive/mon-loadbalancer.julien-hennebo.cloudns.be:/etc/letsencrypt/archive/mon-loadbalancer.julien-hennebo.cloudns.be
     ports:
       - "80:80"
       - "443:443"
-    links:
-      - web1
-      - web2
-      - db1
-      - db2
 
   web1:
     image: wordpress:latest
     container_name: wordpress1
     volumes:
       - ./wordpress/wp1:/var/www/html
-    links:
-      - db1
     environment:
       - WORDPRESS_DB_HOST=db1
       - WORDPRESS_DB_USER=wp1
       - WORDPRESS_DB_PASSWORD=wordpress1234
       - WORDPRESS_DB_NAME=wordpress1
 
-
   web2:
     image: wordpress:latest
     container_name: wordpress2
     volumes:
       - ./wordpress/wp2:/var/www/html
-    links:
-      - db2
     environment:
       - WORDPRESS_DB_HOST=db2
       - WORDPRESS_DB_USER=wp2
@@ -57,7 +50,7 @@ services:
       MYSQL_DATABASE: "wordpress1"
       MYSQL_USER: "wp1"
       MYSQL_PASSWORD: "wordpress1234"
-   
+
   db2:
     image: mysql:latest
     container_name: db2
@@ -69,5 +62,3 @@ services:
       MYSQL_DATABASE: "wordpress2"
       MYSQL_USER: "wp2"
       MYSQL_PASSWORD: "wordpress1234"
-
-

@@ -1,7 +1,7 @@
 # Exclure les dossiers MySQL et WordPress générés
 mysql/
-wordpress1/
-wordpress2/
+wordpress
+
 
 # Exclure les fichiers logs et temporaires
 *.log
