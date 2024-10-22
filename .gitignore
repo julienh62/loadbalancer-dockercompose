@@ -1,0 +1,11 @@
+# Exclure les dossiers MySQL et WordPress générés
+mysql/
+wordpress1/
+wordpress2/
+
+# Exclure les fichiers logs et temporaires
+*.log
+*.tmp
+
+# Exclure les fichiers de configuration sensibles (si nécessaire)
+.env

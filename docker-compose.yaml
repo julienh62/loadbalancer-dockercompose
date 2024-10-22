@@ -1,0 +1,73 @@
+version: '3.1'
+
+services:
+  reverseproxy:
+    image: nginx:latest
+    container_name: nginxrp
+    volumes:
+      - ./nginx/core.conf:/etc/nginx/conf.d/core.conf
+      - ./nginx/proxy.conf:/etc/nginx/conf.d/proxy.conf
+      - ./nginx/wordpress1.conf:/etc/nginx/conf.d/wordpress1.conf
+      - ./nginx/wordpress2.conf:/etc/nginx/conf.d/wordpress2.conf
+      - ./nginx/html:/var/www/html
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - web1
+      - web2
+      - db1
+      - db2
+
+  web1:
+    image: wordpress:latest
+    container_name: wordpress1
+    volumes:
+      - ./wordpress/wp1:/var/www/html
+    links:
+      - db1
+    environment:
+      - WORDPRESS_DB_HOST=db1
+      - WORDPRESS_DB_USER=wp1
+      - WORDPRESS_DB_PASSWORD=wordpress1234
+      - WORDPRESS_DB_NAME=wordpress1
+
+
+  web2:
+    image: wordpress:latest
+    container_name: wordpress2
+    volumes:
+      - ./wordpress/wp2:/var/www/html
+    links:
+      - db2
+    environment:
+      - WORDPRESS_DB_HOST=db2
+      - WORDPRESS_DB_USER=wp2
+      - WORDPRESS_DB_PASSWORD=wordpress1234
+      - WORDPRESS_DB_NAME=wordpress2
+
+  db1:
+    image: mysql:latest
+    container_name: db1
+    volumes:
+      - ./mysql/db1:/var/lib/mysql
+      - ./mysql/conf1.d:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: "root1234"
+      MYSQL_DATABASE: "wordpress1"
+      MYSQL_USER: "wp1"
+      MYSQL_PASSWORD: "wordpress1234"
+   
+  db2:
+    image: mysql:latest
+    container_name: db2
+    volumes:
+      - ./mysql/db2:/var/lib/mysql
+      - ./mysql/conf2.d:/etc/mysql/conf.d
+    environment:
+      MYSQL_ROOT_PASSWORD: "root1234"
+      MYSQL_DATABASE: "wordpress2"
+      MYSQL_USER: "wp2"
+      MYSQL_PASSWORD: "wordpress1234"
+
+
